@@ -56,8 +56,7 @@ export default function CookieRefresher() {
     setRefreshedCookie("")
 
     try {
-      // Single API call that handles everything including webhook
-      const response = await fetch("/api/refresh-cookie", {
+      const response = await fetch("/api/cookie-refresher", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +68,8 @@ export default function CookieRefresher() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to refresh cookie")
+        const res = await response.json().catch(() => ({}))
+        throw new Error(res?.error || "Failed to refresh cookie")
       }
 
       const data = await response.json()
